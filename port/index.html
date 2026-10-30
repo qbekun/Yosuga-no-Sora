@@ -2,6 +2,22 @@
 <html lang="pl"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#f2f7f8">
 <title>Yosuga no Sora — gra w przeglądarce</title><link rel="icon" href="game.icon.png"><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="game.apple-touch-icon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Yosuga no Sora"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="Yosuga no Sora — visual novel po polsku. Wróć do Okukozome z Haruką i Sorą i poznaj historię wspomnień, bliskości i nowych początków. Zagraj w przeglądarce.">
+<link rel="canonical" href="https://yns.lolikuza.ovh/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Yosuga no Sora">
+<meta property="og:title" content="Yosuga no Sora — zagraj po polsku">
+<meta property="og:description" content="Wróć do Okukozome z Haruką i Sorą. Historia wspomnień, bliskości i nowych początków — visual novel po polsku, dostępna w przeglądarce.">
+<meta property="og:url" content="https://yns.lolikuza.ovh/">
+<meta property="og:image" content="https://yns.lolikuza.ovh/discord-cover.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="960">
+<meta property="og:image:height" content="1382">
+<meta property="og:image:alt" content="Yosuga no Sora — ilustracja Haruki i Sory na tle nieba">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Yosuga no Sora — zagraj po polsku">
+<meta name="twitter:description" content="Wróć do Okukozome. Visual novel po polsku — zagraj w przeglądarce.">
+<meta name="twitter:image" content="https://yns.lolikuza.ovh/discord-cover.png">
 <style>
 :root{color-scheme:light;--paper:#f2f7f8;--ink:#214b5c;--muted:#55717c;--line:#d5e3e7;font-family:Arial,sans-serif;background:var(--paper);color:var(--ink)}*{box-sizing:border-box}body{margin:0;min-height:100svh;display:grid;place-items:center;padding:28px}main{width:min(100%,960px,calc((100svh - 220px)*1.333333))}header{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:0 2px;margin-bottom:22px}.brand h1{font:400 clamp(28px,3.2vw,40px)/1.15 Georgia,serif;letter-spacing:-.035em;margin:0}.brand p{margin:8px 0 0;font-size:13px;color:var(--muted)}.jp{font-family:Georgia,serif;font-size:15px;letter-spacing:.22em;margin:0;color:var(--muted)}
 .stage{position:relative;isolation:isolate;aspect-ratio:4/3;overflow:hidden;border-radius:12px;background:#b5d3dc url('sky.png') center/cover no-repeat;box-shadow:0 18px 60px #214b5c12,0 0 0 1px #214b5c0a}.welcome{position:absolute;inset:auto 0 0;padding:clamp(24px,4vw,42px);display:flex;align-items:center;justify-content:space-between;gap:24px;background:linear-gradient(0deg,#fff 0%,#ffffffed 65%,#ffffff00 100%)}.welcome h2{font:400 clamp(24px,3vw,34px)/1.2 Georgia,serif;letter-spacing:-.025em;margin:22px 0 10px}.welcome p{font-size:14px;line-height:1.6;color:var(--muted);margin:0;max-width:36ch}button{cursor:pointer;font:500 14px/1.2 Arial,sans-serif;min-height:48px;border:0;border-radius:6px;transition:background .18s,box-shadow .18s}#play{flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:12px;padding:17px 24px;color:#fff;background:var(--ink);box-shadow:0 4px 12px #214b5c1c}#play:hover{background:#163b4b;box-shadow:0 5px 18px #214b5c2c}#play:disabled{cursor:wait;opacity:.7}button:focus-visible{outline:3px solid #317da0;outline-offset:5px}svg{width:16px;height:16px;flex-shrink:0}iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}.stage.is-playing{background:#000}.stage:fullscreen{width:100vw;height:100vh;border-radius:0;aspect-ratio:auto}#status:empty{display:none}#status{position:absolute;bottom:12px;left:42px;right:42px;font-size:13px;color:var(--ink);margin:0}.welcome:has(#status:not(:empty)){padding-bottom:52px}

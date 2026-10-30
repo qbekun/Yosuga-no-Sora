@@ -7,5 +7,5 @@ if ($LASTEXITCODE -ne 0) { throw 'Project import failed' }
 if ($LASTEXITCODE -ne 0) { throw 'Web export failed' }
 python "$PSScriptRoot/version_web.py"
 if ($LASTEXITCODE -ne 0) { throw 'Web asset versioning failed' }
-Copy-Item "$PSScriptRoot/index.html","$PSScriptRoot/config.js","$PSScriptRoot/asset-bridge.js","$PSScriptRoot/launcher.js","$PSScriptRoot/sky.png","$PSScriptRoot/app.webmanifest" "$PSScriptRoot/publish/"
+Copy-Item "$PSScriptRoot/index.html","$PSScriptRoot/config.js","$PSScriptRoot/asset-bridge.js","$PSScriptRoot/launcher.js","$PSScriptRoot/sky.png","$PSScriptRoot/app.webmanifest","$PSScriptRoot/discord-cover.png" "$PSScriptRoot/publish/"
 Set-Content -LiteralPath "$PSScriptRoot/publish/.nojekyll" -Value ''
