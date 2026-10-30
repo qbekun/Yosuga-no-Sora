@@ -19,6 +19,7 @@ function syncViewport() {
     const top = nativeFullscreen() ? 0 : (viewport?.offsetTop || 0);
     stage.style.setProperty('--game-height', height + 'px');
     stage.style.setProperty('--game-top', top + 'px');
+    layoutFullscreenControls();
   });
 }
 window.visualViewport?.addEventListener('resize', syncViewport);
@@ -28,15 +29,60 @@ const screenTools = document.createElement('div');
 screenTools.className = 'screen-tools';
 const exitScreen = document.createElement('button');
 exitScreen.type = 'button';
-exitScreen.textContent = 'Zamknij pełny ekran';
+exitScreen.setAttribute('aria-label', 'Zamknij pełny ekran');
+exitScreen.title = 'Zamknij pełny ekran';
+exitScreen.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 10h6V4m10 6h-6V4M4 14h6v6m10-6h-6v6"/></svg>';
 screenTools.append(exitScreen);
 const nativeFullscreen = () => document.fullscreenElement || document.webkitFullscreenElement;
 const expanded = () => !!nativeFullscreen() || stage.classList.contains('is-expanded');
+function layoutFullscreenControls() {
+  if (!frame) return;
+  if (!expanded()) {
+    for (const property of ['left', 'top', 'width', 'height']) frame.style.removeProperty(property);
+    return;
+  }
+  const style = getComputedStyle(stage);
+  const left = parseFloat(style.paddingLeft) || 0;
+  const top = parseFloat(style.paddingTop) || 0;
+  const right = parseFloat(style.paddingRight) || 0;
+  const bottom = parseFloat(style.paddingBottom) || 0;
+  const width = Math.max(1, stage.clientWidth - left - right);
+  const height = Math.max(1, stage.clientHeight - top - bottom);
+  const buttonSize = 48;
+  const clearance = buttonSize + 16;
+  let gameWidth = Math.min(width, height * 4 / 3);
+  let gameHeight = gameWidth * 3 / 4;
+  let gameLeft = left + (width - gameWidth) / 2;
+  let gameTop = top + (height - gameHeight) / 2;
+  let buttonLeft;
+  let buttonTop;
+  if ((width - gameWidth) / 2 >= clearance) {
+    // Use the existing black side margin without reducing the game image.
+    buttonLeft = gameLeft + gameWidth + (width - gameWidth) / 4 - buttonSize / 2;
+    buttonTop = top + 8;
+  } else if ((height - gameHeight) / 2 >= clearance) {
+    buttonLeft = left + width - buttonSize - 8;
+    buttonTop = top + 8;
+  } else {
+    // Near 4:3, reserve a separate strip so the control never covers the game.
+    const toolbarHeight = buttonSize + 8;
+    const gameAreaHeight = Math.max(1, height - toolbarHeight);
+    gameWidth = Math.min(width, gameAreaHeight * 4 / 3);
+    gameHeight = gameWidth * 3 / 4;
+    gameLeft = left + (width - gameWidth) / 2;
+    gameTop = top + toolbarHeight + (gameAreaHeight - gameHeight) / 2;
+    buttonLeft = left + width - buttonSize - 8;
+    buttonTop = top + 4;
+  }
+  Object.assign(frame.style, {left: gameLeft + 'px', top: gameTop + 'px', width: gameWidth + 'px', height: gameHeight + 'px'});
+  Object.assign(screenTools.style, {left: buttonLeft + 'px', top: buttonTop + 'px', right: 'auto'});
+}
 function updateScreen() {
   const active = expanded();
   stage.classList.toggle('screen-active', active);
   fullscreen.setAttribute('aria-pressed', String(active));
   fullscreen.lastChild.textContent = active ? ' Zmniejsz ekran' : ' Pełny ekran';
+  syncViewport();
 }
 async function setExpanded(enabled) {
   if (!enabled) {
