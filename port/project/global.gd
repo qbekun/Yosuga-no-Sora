@@ -371,7 +371,20 @@ func check_shortcut_key() -> void :
 			ScreenType.Windowed: set_screen_type(ScreenType.FullScreen)
 			ScreenType.FullScreen: set_screen_type(ScreenType.Windowed)
 
+var _web_screen_initialized: bool = false
+
 func set_screen_type(screen_type: ScreenType) -> void :
+	if OS.has_feature("web"):
+		if _web_screen_initialized:
+			JavaScriptBridge.get_interface("window").requestYosugaFullscreen(screen_type == ScreenType.FullScreen)
+		_web_screen_initialized = true
+	else:
+		_set_native_screen_type(screen_type)
+	if screen_type != cnf_obj.screen_type:
+		cnf_obj.screen_type = screen_type
+		save_config_data()
+
+func _set_native_screen_type(screen_type: ScreenType) -> void:
 	match screen_type:
 		ScreenType.Windowed:
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
@@ -379,9 +392,6 @@ func set_screen_type(screen_type: ScreenType) -> void :
 				DisplayServer.WINDOW_FLAG_BORDERLESS, false)
 		ScreenType.FullScreen:
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
-	if screen_type != cnf_obj.screen_type:
-		cnf_obj.screen_type = screen_type
-		save_config_data()
 
 func setup_adv_screen() -> void :
 	print("+-SetupAdvScreen-+")

@@ -5,5 +5,7 @@ New-Item -ItemType Directory -Force "$PSScriptRoot/publish" | Out-Null
 if ($LASTEXITCODE -ne 0) { throw 'Project import failed' }
 & $Godot --headless --path "$PSScriptRoot/project" --export-release Web
 if ($LASTEXITCODE -ne 0) { throw 'Web export failed' }
-Copy-Item "$PSScriptRoot/index.html","$PSScriptRoot/config.js","$PSScriptRoot/asset-bridge.js","$PSScriptRoot/sky.png" "$PSScriptRoot/publish/"
+python "$PSScriptRoot/version_web.py"
+if ($LASTEXITCODE -ne 0) { throw 'Web asset versioning failed' }
+Copy-Item "$PSScriptRoot/index.html","$PSScriptRoot/config.js","$PSScriptRoot/asset-bridge.js","$PSScriptRoot/launcher.js","$PSScriptRoot/sky.png" "$PSScriptRoot/publish/"
 Set-Content -LiteralPath "$PSScriptRoot/publish/.nojekyll" -Value ''

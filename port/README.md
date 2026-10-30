@@ -25,3 +25,5 @@ Repozytorium: https://github.com/qbekun/Yosuga-no-Sora
 Pierwsze użycie niepobranej paczki może chwilowo zatrzymać grę: oryginalny silnik ładuje zasoby synchronicznie. Bufor JavaScript przechowuje maksymalnie sześć paczek (48 MiB), a nie całą grę. Godot ma dodatkowo własną pamięć tekstur i dźwięków. Dane są pobierane przez HTTPS; przeglądarka wymaga poprawnego CORS na serwerze danych. Zapisy są przechowywane w `user://` i zależą od zachowania danych witryny przez przeglądarkę. Czyszczenie danych witryny usuwa postęp.
 
 Zmiany portu: `ZR.gd` odczytuje indeksy i pobiera skompresowany fragment ZIP przez JavaScriptBridge; `fs.gd` zapisuje do `user://save`; `global.gd` odtwarza opening przez element HTML video.
+
+Na telefonie przycisk „Pełny ekran” uruchamia tryb natywny, jeśli przeglądarka go obsługuje. W pozostałych przypadkach gra wypełnia dostępne okno przeglądarki. Przycisk zamknięcia pozostaje widoczny. Ustawienia, zapisy i historia mają przycisk „Wróć”, który działa też w podmenu ustawień głosów. `version_web.py` nadaje zmienionej paczce silnika i skryptowi mostka nowe adresy, żeby przeglądarka pobierała zgodne wersje.

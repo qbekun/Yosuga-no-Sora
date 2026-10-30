@@ -33,6 +33,9 @@ var ID_WINDOW_DEPTH: ModScroll
 var ID_MESSAGE_SPEED: ModScroll
 var ID_AUTOMODE_SPEED: ModScroll
 
+func _enter_tree() -> void:
+	add_to_group("web_menu")
+
 func _init(parent: Node, from_title: bool) -> void :
 	spr_base = Global.frame_skin.create_form_page(&"ID_PAGE_CONFIG")
 	spr_base.pivot_offset = 0.5 * spr_base.size

@@ -1,5 +1,23 @@
 /* ZIP data stays outside WebAssembly; only the requested entry crosses the bridge. */
 (() => {
+  let backCallback;
+  let backButton;
+  window.registerYosugaBack = (callback) => { backCallback = callback; };
+  window.requestYosugaFullscreen = (enabled) => {
+    if (window.parent !== window) window.parent.postMessage({type: 'yosuga-fullscreen', enabled}, location.origin);
+  };
+  window.setYosugaMenuOpen = (open) => {
+    if (!backButton) {
+      backButton = document.createElement('button');
+      backButton.type = 'button';
+      backButton.textContent = '← Wróć';
+      backButton.setAttribute('aria-label', 'Zamknij menu i wróć');
+      backButton.style.cssText = 'position:fixed;top:max(8px,env(safe-area-inset-top));left:max(8px,env(safe-area-inset-left));z-index:10000;min-width:88px;min-height:48px;padding:12px 18px;border:1px solid #ffffff60;border-radius:7px;background:#214b5cf5;color:white;font:16px Arial,sans-serif;cursor:pointer;touch-action:manipulation;box-shadow:0 3px 12px #0003';
+      backButton.onclick = () => { if (backCallback) backCallback(); document.querySelector('canvas')?.focus(); };
+      document.body.append(backButton);
+    }
+    backButton.hidden = !open;
+  };
   const cache = new Map();
   const maxCachedChunks = 6;
   let base = '';

@@ -18,6 +18,9 @@ var ID_NUMBER: Array[MessageSprite] = []
 var ID_DATE: Array[MessageSprite] = []
 var ID_COMMENT: Array[MessageSprite] = []
 
+func _enter_tree() -> void:
+	add_to_group("web_menu")
+
 func _init(parent: Node, load_: bool) -> void :
 	is_load = load_
 	if is_load:

@@ -51,6 +51,9 @@ func _init(parent: Node) -> void :
 	set_page(index)
 	parent.add_child(self)
 
+func _enter_tree() -> void:
+	add_to_group("web_menu")
+
 func _ready() -> void :
 	ID_SCROLL.enable_container_mode()
 
