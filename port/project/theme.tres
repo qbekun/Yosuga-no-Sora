@@ -1,0 +1,6 @@
+[gd_resource type="Theme" format=3 uid="uid://budedpxoymxop"]
+
+[resource]
+RichTextLabel/constants/shadow_offset_x = 0
+RichTextLabel/constants/shadow_offset_y = 0
+RichTextLabel/constants/shadow_outline_size = 0

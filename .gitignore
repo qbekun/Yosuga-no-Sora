@@ -1,0 +1,12 @@
+port/tools/
+port/release-assets/
+port/publish/
+port/.wrangler/
+**/.godot/
+**/__pycache__/
+*.log
+*.tpz
+*.zip
+*.7z
+*.exe
+*.apk

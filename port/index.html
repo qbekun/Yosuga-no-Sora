@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="pl">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yosuga no Sora — gra w przeglądarce</title>
+<style>
+:root{color-scheme:light;font-family:Georgia,'Times New Roman',serif;background:#e7f1f7;color:#163b52}
+*{box-sizing:border-box}body{margin:0;min-height:100svh;display:grid;place-items:center;padding:24px}
+main{width:min(100%,1000px)}header{text-align:center;margin:32px 0}h1{font-size:clamp(34px,7vw,62px);font-weight:400;margin:12px 0}header p{font-family:Arial,sans-serif;color:#3c6178;line-height:1.6}
+.jp{font-size:20px;letter-spacing:.25em}.stage{background:#142f40;aspect-ratio:4/3;max-height:72svh;max-width:96svw;margin:auto;display:grid;place-items:center;position:relative;border:6px solid #fff;box-shadow:0 14px 48px #34627d25}.welcome{text-align:center;color:white;padding:24px}.welcome p{line-height:1.65;max-width:38ch}button{font:16px Arial,sans-serif;min-height:48px;padding:12px 26px;border:1px solid #e2eef6;background:#eff8ff;color:#163b52;cursor:pointer}button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #327bb0;outline-offset:4px}iframe{border:0;width:100%;height:100%;position:absolute;inset:0}footer{font:14px/1.7 Arial,sans-serif;margin:20px auto;max-width:800px}details{margin-top:20px}input{font:14px Arial,sans-serif;width:100%;padding:12px;margin:8px 0;min-height:44px}#status{white-space:pre-wrap}a{color:#245f87}
+</style>
+<main>
+<header><div class="jp" lang="ja">ヨスガノソラ</div><h1>Yosuga no Sora</h1><p>Wersja przeglądarkowa</p></header>
+<div class="stage" id="stage"><div class="welcome"><p>Wróć do Okukozome.<br>Gra pobiera dane w trakcie rozgrywki.</p><button id="play">Rozpocznij grę</button><p id="status" role="status" aria-live="polite"></p></div></div>
+<footer><p>Kliknięcie / Enter — dalej · S — pomijanie · A — tryb automatyczny<br>Postęp jest zapisywany w tej przeglądarce.</p>
+<details><summary>Ustawienia pobierania danych</summary><label for="assets">Adres serwera danych gry</label><input id="assets" type="url" placeholder="https://yosuga-assets.…workers.dev/"><button id="save">Zapisz adres</button></details>
+<p><a href="https://github.com/qbekun/Yosuga-no-Sora">Projekt na GitHubie</a></p></footer>
+</main>
+<script src="config.js"></script>
+<script>
+const input=document.getElementById('assets');
+input.value=localStorage.getItem('yosuga-assets-url')||window.YOSUGA_ASSET_BASE||'';
+document.getElementById('save').onclick=()=>{try{const url=new URL(input.value,location.href);if(!['http:','https:'].includes(url.protocol))throw Error();localStorage.setItem('yosuga-assets-url',url.href);document.getElementById('status').textContent='Zapisano adres danych.'}catch{document.getElementById('status').textContent='Podaj poprawny adres HTTPS.'}};
+document.getElementById('play').onclick=async()=>{
+ const status=document.getElementById('status');status.textContent='Sprawdzanie danych gry…';
+ try{const base=localStorage.getItem('yosuga-assets-url')||window.YOSUGA_ASSET_BASE||'../release-assets/';const url=new URL(base,location.href);if(!url.pathname.endsWith('/'))url.pathname+='/';const response=await fetch(new URL('manifest.json',url));if(!response.ok)throw Error('HTTP '+response.status);const manifest=await response.json();if(!manifest.files)throw Error('Niepoprawny katalog danych');const frame=document.createElement('iframe');frame.title='Yosuga no Sora';frame.allow='autoplay; fullscreen';frame.src='game.html';document.getElementById('stage').replaceChildren(frame);frame.focus();}
+ catch(error){status.textContent='Nie udało się połączyć z danymi gry. Sprawdź adres w ustawieniach pobierania.';console.error(error)}
+};
+</script>
+</html>
