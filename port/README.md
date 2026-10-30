@@ -2,7 +2,7 @@
 
 ## Przenoszenie zapisów
 
-Po uruchomieniu gry przyciski pod oknem gry pozwalają pobrać zapisane sloty do jednego pliku `.ynssave` i wczytać ten plik na drugim urządzeniu. Najpierw zapisz postęp przez Save lub Q.Save w samej grze. Pobranie pliku nie tworzy nowego zapisu bieżącej sceny. Import zastępuje tylko pliki o tych samych nazwach i wymaga potwierdzenia; potem wybierz Load lub Q.Load w grze. Można też zaimportować pojedynczy `Save01.png`–`Save60.png` lub `QSave.sav` z tej samej wersji gry PC. Pliki są przetwarzane lokalnie, bez wysyłania zapisów na serwer. Uszkodzone i niezgodne zapisy są sprawdzane przed zapisem do pamięci przeglądarki.
+Po uruchomieniu gry przyciski pod oknem gry pozwalają pobrać zapisane sloty do jednego pliku `.json` (wcześniejsze pliki `.ynssave` też są obsługiwane) i wczytać ten plik na drugim urządzeniu. Najpierw zapisz postęp przez Save lub Q.Save w samej grze. Pobranie pliku nie tworzy nowego zapisu bieżącej sceny. Import zastępuje tylko pliki o tych samych nazwach i wymaga potwierdzenia; potem wybierz Load lub Q.Load w grze. Można też zaimportować pojedynczy `Save01.png`–`Save60.png` lub `QSave.sav` z tej samej wersji gry PC. Pliki są przetwarzane lokalnie, bez wysyłania zapisów na serwer. Uszkodzone i niezgodne zapisy są sprawdzane przed zapisem do pamięci przeglądarki.
 
 Port z Godota 4.6.1. Oryginalne pliki gry pozostają w katalogu nadrzędnym.
 

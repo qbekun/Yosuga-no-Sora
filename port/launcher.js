@@ -18,7 +18,7 @@ downloadSaves.onclick = () => {
     const url = URL.createObjectURL(new Blob([JSON.stringify(result.bundle)], {type:'application/json'}));
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'yosuga-zapisy-' + new Date().toISOString().slice(0,10) + '.ynssave';
+    link.download = 'yosuga-zapisy-' + new Date().toISOString().slice(0,10) + '.json';
     document.body.append(link); link.click(); link.remove();
     setTimeout(() => URL.revokeObjectURL(url), 60000);
     saveStatus.textContent = 'Plik zapisów jest gotowy. Prześlij go na drugie urządzenie.';
@@ -37,7 +37,7 @@ saveInput.onchange = async () => {
       });
       bundle = {format:'yosuga-save',version:1,files:{[file.name]:encoded}};
     } else bundle = JSON.parse(await file.text());
-    if (bundle?.format !== 'yosuga-save' || bundle.version !== 1 || !bundle.files || typeof bundle.files !== 'object') throw Error('Wybierz plik .ynssave albo zapis Save01.png / QSave.sav z tej samej wersji gry.');
+    if (bundle?.format !== 'yosuga-save' || bundle.version !== 1 || !bundle.files || typeof bundle.files !== 'object') throw Error('Wybierz plik zapisów .json lub .ynssave albo zapis Save01.png / QSave.sav z tej samej wersji gry.');
     if (!confirm('Wczytać zapisy z pliku? Zapisy o tych samych nazwach zostaną zastąpione. Możesz wcześniej pobrać ich kopię.')) return;
     saveStatus.textContent = transfer('import', JSON.stringify(bundle)).message;
   } catch (error) { saveStatus.textContent = error instanceof SyntaxError ? 'To nie jest poprawny plik zapisów.' : error.message; }
