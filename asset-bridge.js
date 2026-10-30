@@ -1,5 +1,13 @@
 /* ZIP data stays outside WebAssembly; only the requested entry crosses the bridge. */
 (() => {
+  window.registerYosugaSaves = callback => {
+    window.YosugaSaveTransfer = (action, data = '') => {
+      window.yosugaSaveResult = '';
+      callback(action, data);
+      return JSON.parse(window.yosugaSaveResult);
+    };
+    window.parent.postMessage({type:'yosuga-save-ready'}, location.origin);
+  };
   let backCallback;
   let backButton;
   window.registerYosugaBack = (callback) => { backCallback = callback; };

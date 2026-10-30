@@ -2,6 +2,46 @@ const play = document.getElementById('play');
 const stage = document.getElementById('stage');
 const fullscreen = document.getElementById('fullscreen');
 let frame;
+const downloadSaves = document.getElementById('download-saves');
+const uploadSaves = document.getElementById('upload-saves');
+const saveInput = document.getElementById('save-file');
+const saveStatus = document.getElementById('save-transfer-status');
+const transfer = (action, data = '') => {
+  const result = frame?.contentWindow.YosugaSaveTransfer?.(action, data);
+  if (!result?.ok) throw Error(result?.message || 'Poczekaj na uruchomienie gry.');
+  return result;
+};
+downloadSaves.onclick = () => {
+  try {
+    const result = transfer('export');
+    if (!result.slots) throw Error('Najpierw zapisz postęp przez Save lub Q.Save w grze.');
+    const url = URL.createObjectURL(new Blob([JSON.stringify(result.bundle)], {type:'application/json'}));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'yosuga-zapisy-' + new Date().toISOString().slice(0,10) + '.ynssave';
+    document.body.append(link); link.click(); link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+    saveStatus.textContent = 'Plik zapisów jest gotowy. Prześlij go na drugie urządzenie.';
+  } catch (error) { saveStatus.textContent = error.message; }
+};
+uploadSaves.onclick = () => { saveInput.value = ''; saveInput.click(); };
+saveInput.onchange = async () => {
+  const file = saveInput.files[0];
+  if (!file) return;
+  try {
+    if (file.size > 48 * 1024 * 1024) throw Error('Plik jest za duży (maksymalnie 48 MB).');
+    let bundle;
+    if (/^(Save\d{2}\.png|QSave\.sav)$/.test(file.name)) {
+      const encoded = await new Promise((resolve, reject) => {
+        const reader = new FileReader(); reader.onload = () => resolve(reader.result.split(',')[1]); reader.onerror = reject; reader.readAsDataURL(file);
+      });
+      bundle = {format:'yosuga-save',version:1,files:{[file.name]:encoded}};
+    } else bundle = JSON.parse(await file.text());
+    if (bundle?.format !== 'yosuga-save' || bundle.version !== 1 || !bundle.files || typeof bundle.files !== 'object') throw Error('Wybierz plik .ynssave albo zapis Save01.png / QSave.sav z tej samej wersji gry.');
+    if (!confirm('Wczytać zapisy z pliku? Zapisy o tych samych nazwach zostaną zastąpione. Możesz wcześniej pobrać ich kopię.')) return;
+    saveStatus.textContent = transfer('import', JSON.stringify(bundle)).message;
+  } catch (error) { saveStatus.textContent = error instanceof SyntaxError ? 'To nie jest poprawny plik zapisów.' : error.message; }
+};
 const standalone = () => navigator.standalone === true || matchMedia('(display-mode: standalone)').matches || matchMedia('(display-mode: fullscreen)').matches;
 const ios = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 const iosHelp = document.getElementById('ios-help');
@@ -123,6 +163,11 @@ document.addEventListener('keydown', event => {
 });
 window.addEventListener('message', event => {
   if (event.origin !== location.origin || event.source !== frame?.contentWindow) return;
+  if (event.data?.type === 'yosuga-save-ready') {
+    downloadSaves.disabled = false;
+    uploadSaves.disabled = false;
+    saveStatus.textContent = 'Najpierw użyj Save w grze. Potem pobierz plik i wczytaj go na drugim urządzeniu.';
+  }
   if (event.data?.type === 'yosuga-fullscreen') setExpanded(event.data.enabled === true);
 });
 play.onclick = async () => {

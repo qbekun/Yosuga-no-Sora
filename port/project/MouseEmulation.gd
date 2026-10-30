@@ -3,11 +3,17 @@ extends Node
 var was_last_emulated: = false
 var _web_back_callback: JavaScriptObject
 var _web_menu_visible: bool = false
+var _save_callback: JavaScriptObject
 
 func _ready() -> void:
 	if OS.has_feature("web"):
 		_web_back_callback = JavaScriptBridge.create_callback(_web_back)
 		JavaScriptBridge.get_interface("window").registerYosugaBack(_web_back_callback)
+		_register_saves.call_deferred()
+
+func _register_saves() -> void:
+	_save_callback = JavaScriptBridge.create_callback(preload("res://WebSaveTransfer.gd").handle)
+	JavaScriptBridge.get_interface("window").registerYosugaSaves(_save_callback)
 
 func _process(_delta: float) -> void:
 	if not OS.has_feature("web"):
