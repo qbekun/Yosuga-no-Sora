@@ -1,6 +1,6 @@
 # Yosuga no Sora — Web
 
-[Uruchom grę](https://qbekun.github.io/Yosuga-no-Sora/)
+[Uruchom grę](https://yns.lolikuza.ovh/)
 
 Port gry do przeglądarki na silniku Godot 4.6.1, z obecną w projekcie polską wersją tekstu.
 

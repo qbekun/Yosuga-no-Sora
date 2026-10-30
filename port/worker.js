@@ -3,7 +3,12 @@ const upstream = 'https://github.com/qbekun/Yosuga-no-Sora/releases/download/web
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
-    const origin = env.ALLOWED_ORIGIN || 'https://qbekun.github.io';
+    const allowedOrigins = (env.ALLOWED_ORIGINS || env.ALLOWED_ORIGIN || 'https://yns.lolikuza.ovh,https://qbekun.github.io')
+      .split(',').map(value => value.trim()).filter(Boolean);
+    const requestedOrigin = request.headers.get('Origin');
+    if (requestedOrigin && !allowedOrigins.includes(requestedOrigin))
+      return new Response('Origin not allowed', {status: 403, headers: {'Vary': 'Origin'}});
+    const origin = requestedOrigin || allowedOrigins[0];
     const cors = {'Access-Control-Allow-Origin': origin, 'Vary': 'Origin'};
     if (request.method === 'OPTIONS') return new Response(null, {headers: {...cors, 'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS'}});
     if (!['GET', 'HEAD'].includes(request.method)) return new Response('Method not allowed', {status: 405, headers: cors});

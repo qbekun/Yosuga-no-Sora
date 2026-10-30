@@ -2,5 +2,5 @@
   "name": "yosuga-assets",
   "main": "worker.js",
   "compatibility_date": "2026-10-30",
-  "vars": {"ALLOWED_ORIGIN": "https://qbekun.github.io"}
+  "vars": {"ALLOWED_ORIGINS": "https://yns.lolikuza.ovh,https://qbekun.github.io"}
 }
