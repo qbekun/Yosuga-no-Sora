@@ -40,10 +40,6 @@ def main():
         release = request('/repos/' + REPO + '/releases', 'POST', {
             'tag_name': 'web-assets-v1', 'name': 'Web game assets v1', 'draft': True,
             'body': 'Indexed game data for the browser port. Files are split into 8 MiB chunks; manifest.json contains sizes and SHA-256 checksums.'})
-    if args.publish:
-        result = request('/repos/' + REPO + '/releases/' + str(release['id']), 'PATCH', {'draft': False})
-        print('Published:', result['html_url'], flush=True)
-        return
     existing = {}
     page = 1
     while True:
@@ -54,6 +50,15 @@ def main():
         page += 1
     manifest = json.loads((BASE / 'release-assets/manifest.json').read_text())
     allowed = set(manifest['files']) | {'manifest.json'}
+    if args.publish:
+        expected = dict(manifest['files'])
+        expected['manifest.json'] = {'size': (BASE / 'release-assets/manifest.json').stat().st_size}
+        incomplete = [name for name, value in expected.items() if name not in existing or existing[name]['size'] != value['size']]
+        if incomplete:
+            raise RuntimeError('Cannot publish: missing or incomplete assets: ' + ', '.join(incomplete))
+        result = request('/repos/' + REPO + '/releases/' + str(release['id']), 'PATCH', {'draft': False})
+        print('Verified all assets. Published:', result['html_url'], flush=True)
+        return
     files = sorted(p for p in (BASE / 'release-assets').iterdir() if p.name in allowed and (not args.only or p.name == args.only))
     missing = [p for p in files if p.name not in existing or existing[p.name]['size'] != p.stat().st_size]
     upload_url = release['upload_url'].split('{')[0]
