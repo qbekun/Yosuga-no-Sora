@@ -2,6 +2,28 @@ const play = document.getElementById('play');
 const stage = document.getElementById('stage');
 const fullscreen = document.getElementById('fullscreen');
 let frame;
+const standalone = () => navigator.standalone === true || matchMedia('(display-mode: standalone)').matches || matchMedia('(display-mode: fullscreen)').matches;
+const ios = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const iosHelp = document.getElementById('ios-help');
+const iosDialog = document.getElementById('ios-install');
+if (ios && !standalone()) iosHelp.hidden = false;
+document.getElementById('ios-help-open').onclick = () => iosDialog.showModal();
+document.getElementById('ios-help-close').onclick = () => iosDialog.close();
+iosDialog.addEventListener('click', event => { if (event.target === iosDialog) iosDialog.close(); });
+let viewportUpdate;
+function syncViewport() {
+  cancelAnimationFrame(viewportUpdate);
+  viewportUpdate = requestAnimationFrame(() => {
+    const viewport = window.visualViewport;
+    const height = nativeFullscreen() ? innerHeight : (viewport?.height || innerHeight);
+    const top = nativeFullscreen() ? 0 : (viewport?.offsetTop || 0);
+    stage.style.setProperty('--game-height', height + 'px');
+    stage.style.setProperty('--game-top', top + 'px');
+  });
+}
+window.visualViewport?.addEventListener('resize', syncViewport);
+window.visualViewport?.addEventListener('scroll', syncViewport);
+window.addEventListener('resize', syncViewport);
 const screenTools = document.createElement('div');
 screenTools.className = 'screen-tools';
 const exitScreen = document.createElement('button');
@@ -37,6 +59,7 @@ async function setExpanded(enabled) {
     }
   }
   updateScreen();
+  syncViewport();
   frame?.focus();
 }
 fullscreen.onclick = () => setExpanded(!expanded());
@@ -76,6 +99,7 @@ play.onclick = async () => {
     stage.classList.add('is-playing');
     stage.replaceChildren(frame, screenTools);
     fullscreen.hidden = false;
+    if (standalone()) await setExpanded(true);
     frame.focus();
   } catch (error) {
     status.textContent = 'Nie udało się pobrać danych gry. Spróbuj ponownie za chwilę.';
